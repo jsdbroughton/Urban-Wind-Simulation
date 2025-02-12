@@ -1,100 +1,71 @@
-# Speckle Automate function template - Python
+# Introduction
 
-This template repository is for a Speckle Automate function written in Python
-using the [specklepy](https://pypi.org/project/specklepy/) SDK to interact with Speckle data.
+**Urban Wind Simulation** is a speckle automate function that aims to solve wind comfort levels on urban scale by using computational fluid dynamics with OpenFOAM 11. The base libraries behind it is [archaea-simulation](https://pypi.org/project/archaea-simulation/) and [archaea](https://pypi.org/project/archaea/) which include interfaces to convert given geometries into CFD scenarios.
 
-This template contains the full scaffolding required to publish a function to the Automate environment.
-It also has some sane defaults for development environment setups.
+![CFD Sample Result](/img/sample_result.png)
 
-## Getting started
+# Key Concepts
 
-1. Use this template repository to create a new repository in your own / organization's profile.
+## 1. Domain Orientation
 
-Register the function 
+In urban wind simulation, the proper orientation of the computational domain is crucial to accurately assess the effects of wind on urban environments. The domain orientation is typically defined in relation to the prevailing wind direction. This relationship ensures that the simulated wind flow aligns with the real-world wind conditions and enables the precise modeling of urban airflow.
 
-### Add new dependencies
+The direction of the wind is commonly represented using meteorological angles (δ), designated as δ. These angles increase in a clockwise manner from the north (y) axis. In this convention, 0 degrees typically points to the north, 90 degrees points to the east, 180 degrees points to the south, and 270 degrees points to the west. Meteorological conventions are widely used in weather and wind studies, making it essential to align the domain orientation with these angles. Math angles, designated by α, increase counterclockwise from the east (x) axis. For OpenFOAM simulations, user need to define wind direction in meteorological angles.
 
-To add new Python package dependencies to the project, use the following:
-`$ poetry add pandas`
+![Math & Meteo Angles](/img/math_meteo_angles.png)
 
-### Change launch variables
+## 2. Atmospheric Boundary Layer (WIP)
 
-Describe how the launch.json should be edited.
+Wind speed data collected from weather stations provides precise values for specific heights. However, when it comes to simulating wind behavior at varying altitudes, creating an atmospheric boundary layer (ABL) is not just a recommended practice; it's an absolute necessity.
 
-### Github Codespaces
+As pointed out weather stations typically provide wind data at specific heights above the ground. These measurements offer valuable insights into the wind's behavior but are limited to the measured heights. In urban environments, wind patterns vary significantly with altitude due to the influence of buildings, terrain, and other factors. To accurately represent real-world conditions, simulating the ABL is essential because it accounts for the vertical variation in wind speed, turbulence, and other atmospheric parameters.
 
-Create a new repo from this template, and use the create new code.
+![Atmospheric Boundary Layer](/img/abl.png)
 
-### Using this Speckle Function
+## 3. Wind Tunnel Sizing
 
-1. [Create](https://automate.speckle.dev/) a new Speckle Automation.
-1. Select your Speckle Project and Speckle Model.
-1. Select the deployed Speckle Function.
-1. Enter a phrase to use in the comment.
-1. Click `Create Automation`.
+A wind tunnel serves as the designated domain where air flows during simulations. The automation function plays a crucial role in determining the bounding box's alignment with the wind direction for geometries targeted for simulation. It then scales the computational domain according to the specified function inputs. The domain's size is a critical factor in wind simulations, as it directly impacts various aspects, including simulation time and the number of volume meshes.
 
-## Getting Started with Creating Your Own Speckle Function
+#### Realistic Wind Tunnel Simulations
 
-1. [Register](https://automate.speckle.dev/) your Function with [Speckle Automate](https://automate.speckle.dev/) and select the Python template.
-1. A new repository will be created in your GitHub account.
-1. Make changes to your Function in `main.py`. See below for the Developer Requirements and instructions on how to test.
-1. To create a new version of your Function, create a new [GitHub release](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) in your repository.
+Wind tunnels are essential for accurately modeling wind flow around complex geometries, such as buildings or structures. They provide a controlled environment where the effects of wind can be studied, enabling engineers and researchers to gain insights into aerodynamic behavior, pressure distributions, and other critical parameters. Wind tunnels ensure that simulations closely match real-world conditions.
 
-## Developer Requirements
+#### Automated Alignment and Scaling
 
-1. Install the following:
-    - [Python 3](https://www.python.org/downloads/)
-    - [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer)
-1. Run `poetry shell && poetry install` to install the required Python packages.
+The automated function for bounding box alignment and domain scaling simplifies and streamlines the simulation process. It ensures that the domain is appropriately aligned with the prevailing wind direction for the specific geometry under study. The ability to automate these tasks reduces the potential for errors and makes it easier to adapt simulations to different scenarios and geometries.
 
-## Building and Testing
+#### Impact on Simulation Time
 
-The code can be tested locally by running `poetry run pytest`.
+The size of the computational domain has a direct impact on the time required for wind simulations. Larger domains encompass more grid points and computational elements, which can significantly increase computational demands. Understanding this relationship is crucial for optimizing simulation efficiency, as excessively large domains may lead to impractical computation times, while overly small domains may sacrifice accuracy.
 
-### Building and running the Docker Container Image
+#### Meshing Considerations
 
-Running and testing your code on your machine is a great way to develop your Function; the following instructions are a bit more in-depth and only required if you are having issues with your Function in GitHub Actions or on Speckle Automate.
+In wind simulations, the number of volume meshes generated is closely tied to the domain's size. Larger domains with finer resolution require more mesh elements, increasing computational and memory requirements. Balancing domain size and mesh density is a critical consideration for achieving accurate results while maintaining computational feasibility.
 
-#### Building the Docker Container Image
 
-The GitHub Action packages your code into the format required by Speckle Automate. This is done by building a Docker Image, which Speckle Automate runs. You can attempt to build the Docker Image locally to test the building process.
+![Wind Tunnel Sizing](/img/wind_tunnel_sizing.png)
 
-To build the Docker Container Image, you must have [Docker](https://docs.docker.com/get-docker/) installed.
+## 4. Parallel Computing
 
-Once you have Docker running on your local machine:
+OpenFOAM supports parallelism through domain decomposition, which involves dividing the computational domain into smaller subdomains that can be solved concurrently. This approach allows for efficient distribution of computational work, reducing simulation times and enabling the modeling of larger and more complex problems.
 
-1. Open a terminal
-1. Navigate to the directory in which you cloned this repository
-1. Run the following command:
+#### Efficient Computational Work Distribution
 
-    ```bash
-    docker build -f ./Dockerfile -t speckle_automate_python_example .
-    ```
+Domain decomposition is a fundamental technique that optimizes the distribution of computational work among multiple processing units (cores or nodes). By breaking the domain into smaller, manageable subdomains, each subdomain can be solved independently by a separate processor. This efficient distribution of work enables parallel processing, significantly reducing simulation times for complex problems.
 
-#### Running the Docker Container Image
+#### Scalability and Complex Problem Solving
 
-Once the GitHub Action has built the image, it is sent to Speckle Automate. When Speckle Automate runs your Function as part of an Automation, it will run the Docker Container Image. You can test that your Docker Container Image runs correctly locally.
+OpenFOAM's support for domain decomposition makes it highly scalable. It allows simulations to be scaled up to handle larger and more intricate problems, whether in terms of domain size, mesh complexity, or the number of physical processes being simulated. This scalability is especially critical in urban-scale modeling, where simulations often involve complex geometries and extensive meshing.
 
-1. To then run the Docker Container Image, run the following command:
+#### Resource Utilization
+Utilizing parallelism effectively with domain decomposition is vital for maximizing computational resource utilization. It enables simulations to take full advantage of multi-core processors or distributed computing clusters, which is essential for completing simulations in a reasonable amount of time, particularly for urban-scale studies with significant computational requirements.
 
-    ```bash
-    docker run --rm speckle_automate_python_example \
-    python -u main.py run \
-    '{"projectId": "1234", "modelId": "1234", "branchName": "myBranch", "versionId": "1234", "speckleServerUrl": "https://speckle.xyz", "automationId": "1234", "automationRevisionId": "1234", "automationRunId": "1234", "functionId": "1234", "functionName": "my function", "functionLogo": "base64EncodedPng"}' \
-    '{}' \
-    yourSpeckleServerAuthenticationToken
-    ```
+#### Simulating Real-World Complexities
+In urban wind simulations, various factors come into play, including the presence of buildings, streets, and other urban features that influence wind patterns. OpenFOAM's parallelism with domain decomposition empowers researchers to simulate these real-world complexities with the accuracy and efficiency required for urban planning, environmental assessments, and urban microclimate studies.
 
-Let's explain this in more detail:
+#### Handling Large Data Sets
+Urban-scale simulations often generate extensive data sets for analysis. Parallelism allows simulations to efficiently handle and process the large volumes of data generated, ensuring that researchers can extract valuable insights from the simulations in a timely manner.
 
-`docker run—-rm speckle_automate_python_example` tells Docker to run the Docker Container Image we built earlier. `speckle_automate_python_example` is the name of the Docker Container Image. The `--rm` flag tells Docker to remove the container after it has finished running, freeing up space on your machine.
+## 5. Supported Speckle Objects
 
-The line `python -u main.py run` is the command run inside the Docker Container Image. The rest of the command is the arguments passed to the command. The arguments are:
-
-- `'{"projectId": "1234", "modelId": "1234", "branchName": "myBranch", "versionId": "1234", "speckleServerUrl": "https://speckle.xyz", "automationId": "1234", "automationRevisionId": "1234", "automationRunId": "1234", "functionId": "1234", "functionName": "my function", "functionLogo": "base64EncodedPng"}'` - the metadata that describes the automation and the function.
-- `{}` - the input parameters for the function the Automation creator can set. Here, they are blank, but you can add your parameters to test your function.
-- `yourSpeckleServerAuthenticationToken`—the authentication token for the Speckle Server that the Automation can connect to. This is required to interact with the Speckle Server, for example, to get data from the Model.
-
-## Resources
-
-- [Learn](https://speckle.guide/dev/python.html) more about SpecklePy and interacting with Speckle from Python.
+- Objects.Geometry.Brep
