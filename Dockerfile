@@ -1,48 +1,51 @@
-# Use the official Python 3.11 slim base image
-FROM python:3.11-slim-bookworm
+# Use Ubuntu 24.04 as the base image
+FROM ubuntu:24.04
 
-# Set non-interactive for apt to avoid interactive prompts
+# Set non-interactive mode to avoid prompts during installation
 ENV DEBIAN_FRONTEND=noninteractive
-
-# Setup timezone
 ENV TZ=Europe/Istanbul
 ENV VM_PROJECT_DIR=/opt/openfoam9
 
-# Install system dependencies if needed
+# Install system dependencies and Python 3.11
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     netbase \
     tzdata \
     wget \
     software-properties-common \
+    python3.11 \
+    python3.11-venv \
     python3-pip \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install OpenFOAM (Optional - if needed, you can remove this section)
-RUN wget -O - https://dl.openfoam.org/gpg.key > /etc/apt/trusted.gpg.d/openfoam.asc
-RUN add-apt-repository http://dl.openfoam.org/ubuntu
-RUN apt-get update && apt-get install -y --no-install-recommends openfoam9
+# Install OpenFOAM (if required)
+RUN wget -O - https://dl.openfoam.org/gpg.key | tee /etc/apt/trusted.gpg.d/openfoam.asc \
+    && add-apt-repository http://dl.openfoam.org/ubuntu \
+    && apt-get update && apt-get install -y --no-install-recommends openfoam9 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set up OpenFOAM environment (if needed)
-RUN echo "source /opt/openfoam9/etc/bashrc" >> /root/.bashrc
-RUN echo "source /opt/openfoam9/etc/bashrc" >> /home/openfoamRunner/.bashrc
+# Create a non-root user for running OpenFOAM
+RUN useradd -ms /bin/bash openfoamRunner && \
+    mkdir -p $VM_PROJECT_DIR && \
+    chown -R openfoamRunner:openfoamRunner $VM_PROJECT_DIR
 
-# Create a non-root user
-RUN useradd -ms /bin/bash openfoamRunner
-
-# Change the ownership of the project directory to the non-root user
-RUN chown -R openfoamRunner:openfoamRunner $VM_PROJECT_DIR
-
+# Switch to the non-root user
 USER openfoamRunner
 
-# Copy the project files (including requirements.txt)
-COPY . /home/openfoamRunner/
-
-# Install Python dependencies using pip
-RUN pip install --no-cache-dir -r /home/openfoamRunner/requirements.txt
+# Set OpenFOAM environment variables for non-root user
+RUN echo "source /opt/openfoam9/etc/bashrc" >> ~/.bashrc
 
 # Set working directory
 WORKDIR /home/openfoamRunner/
+
+# Copy project files
+COPY --chown=openfoamRunner:openfoamRunner . /home/openfoamRunner/
+
+# Use Python 3.11 explicitly
+RUN python3.11 -m pip install --upgrade pip && \
+    python3.11 -m pip install --no-cache-dir -r requirements.txt
 
 # Default command
 CMD ["/bin/bash"]
