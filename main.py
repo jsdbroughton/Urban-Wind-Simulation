@@ -126,7 +126,7 @@ def automate_function(
 
     # Get case folder
     case_folder = os.path.join(archaea_folder, version_root_object.id)
-    domain.create_case(case_folder, function_inputs.number_of_cpus)
+    domain.create_cfd_case(case_folder, function_inputs.number_of_cpus)
     cmd_path = os.path.join(case_folder, './All-runs')
     cmd = "/bin/bash -c '{cmd_path}'".format(cmd_path=cmd_path)
 
