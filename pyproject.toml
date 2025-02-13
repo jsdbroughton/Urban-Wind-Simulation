@@ -7,7 +7,7 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.12"
+python = ">=3.13,<3.14"
 specklepy = "^2.21.3"
 archaea-simulation = "^1.3.0"
 disttools = "^0.2.0"
