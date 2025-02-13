@@ -13,9 +13,9 @@ archaea-simulation==1.3.0 ; python_version >= "3.11" and python_version < "3.12"
 archaea==1.1.28 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:d4795cc60259ac3945164002b1600ff23a8433579afb7664039e642386f6c5f3 \
     --hash=sha256:fd927244fe87dd1c0d8fc6a7dd09ae3848d3bcbce64b9e85a3254da8fa820321
-attrs==23.2.0 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:935dc3b529c262f6cf76e50877d35a4bd3c1de194fd41f47a2b7ae8f19971f30 \
-    --hash=sha256:99b87a485a5820b23b879f04c2305b44b951b502fd64be915879d77a7e8fc6f1
+attrs==25.1.0; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:1c97078a80c814273a76b2a298a932eb681c87415c11dee0a6921de7f1b02c3e \
+    --hash=sha256:c75a69e28a550a7e93789579c22aa26b0f5b83b75dc4e08fe092980051e1090a
 backoff==2.2.1 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:03f829f5bb1923180821643f8753b0502c3b682293992485b0eef2807afa5cba \
     --hash=sha256:63579f9a0628e06278f7e47b7d7d5b6ce20dc65c5e96a6f3ca99a6adca0396e8
