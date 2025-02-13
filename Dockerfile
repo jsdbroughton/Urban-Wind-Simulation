@@ -1,48 +1,48 @@
-FROM ubuntu:22.04
+# Use the official Python 3.11 slim base image
+FROM python:3.11-slim-bookworm
+
+# Set non-interactive for apt to avoid interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# setup timezone
+# Setup timezone
 ENV TZ=Europe/Istanbul
 ENV VM_PROJECT_DIR=/opt/openfoam9
 
-# Create a non-root user 
-RUN useradd -ms /bin/bash openfoamRunner
+# Install system dependencies if needed
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    netbase \
+    tzdata \
+    wget \
+    software-properties-common \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
-# Install dependencies and Python 3.11 (without Deadsnakes repository)
-RUN apt update && apt install -y wget software-properties-common python3-pip python3-apt
-RUN apt update
-RUN apt-get install -y python3.11 python3.11-distutils
-
-# Ensure python3 points to python3.11
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
-RUN update-alternatives --set python3 /usr/bin/python3.11
-
-# Install OpenFOAM and other necessary packages
+# Install OpenFOAM (Optional - if needed, you can remove this section)
 RUN wget -O - https://dl.openfoam.org/gpg.key > /etc/apt/trusted.gpg.d/openfoam.asc
+RUN add-apt-repository http://dl.openfoam.org/ubuntu
+RUN apt-get update && apt-get install -y --no-install-recommends openfoam9
 
-# Manually add the OpenFOAM repository to sources.list
-RUN echo "deb http://dl.openfoam.org/ubuntu focal main" > /etc/apt/sources.list.d/openfoam.list
-
-RUN apt-get update
-RUN apt-get -y --no-install-recommends install openfoam9
-
+# Set up OpenFOAM environment (if needed)
 RUN echo "source /opt/openfoam9/etc/bashrc" >> /root/.bashrc
 RUN echo "source /opt/openfoam9/etc/bashrc" >> /home/openfoamRunner/.bashrc
 
-# Install Poetry
-RUN pip install poetry
+# Create a non-root user
+RUN useradd -ms /bin/bash openfoamRunner
 
-# Change the ownership of your project directory to the non-root user
+# Change the ownership of the project directory to the non-root user
 RUN chown -R openfoamRunner:openfoamRunner $VM_PROJECT_DIR
 
 USER openfoamRunner
 
-# Copy the project files into the container
-COPY . .
+# Copy the project files (including requirements.txt)
+COPY . /home/openfoamRunner/
 
-# Export the requirements.txt using poetry and install dependencies
-RUN poetry export -f requirements.txt --output /home/openfoamRunner/requirements.txt && pip3 install -r /home/openfoamRunner/requirements.txt
+# Install Python dependencies using pip
+RUN pip install --no-cache-dir -r /home/openfoamRunner/requirements.txt
 
+# Set working directory
+WORKDIR /home/openfoamRunner/
+
+# Default command
 CMD ["/bin/bash"]
