@@ -1,13 +1,12 @@
 """This module contains the business logic of the function.
 
-use the automation_context module to wrap your function in an Autamate context helper
+use the automation_context module to wrap your function in an Automate context helper
 """
 import os
 import subprocess
 
 from archaea.geometry.vector3d import Vector3d
 from archaea.geometry.mesh import Mesh
-from archaea.geometry.point3d import Point3d
 from archaea_simulation.simulation_objects.domain import Domain
 from archaea_simulation.speckle.vtk_to_speckle import vtk_to_speckle, Text
 from archaea_simulation.cfd.utils.path import get_cfd_export_path
@@ -17,11 +16,9 @@ from speckle_automate import (
     AutomationContext,
     execute_automate_function,
 )
-from specklepy.api import operations
 from specklepy.objects.base import Base
 from specklepy.objects.other import DisplayStyle
 from specklepy.objects.geometry import Brep, Line, Polyline, Point, Plane
-from specklepy.transports.server import ServerTransport
 
 from flatten import flatten_base
 
@@ -54,7 +51,7 @@ class FunctionInputs(AutomateBase):
     )
     number_of_cpus: int = Field(
         title="Number of CPUs",
-        description="Number of CPUs to run simulation parallelly.",
+        description="Number of CPUs to run simulation in parallel.",
         default=4,
     )
     tunnel_width_scale: float = Field(
@@ -86,14 +83,14 @@ def automate_function(
         automate_context: A context helper object, that carries relevant information
             about the runtime context of this function.
             It gives access to the Speckle project data, that triggered this run.
-            It also has conveniece methods attach result data to the Speckle model.
+            It also has convenience methods attach result data to the Speckle model.
         function_inputs: An instance object matching the defined schema.
     """
 
     print("number of cpus", os.cpu_count())
     subprocess.run("/bin/bash -c 'source /opt/openfoam9/etc/bashrc'", shell=True)
 
-    # the context provides a conveniet way, to receive the triggering version
+    # the context provides a convenient way, to receive the triggering version
     version_root_object = automate_context.receive_version()
     accepted_types = [Brep.speckle_type]
     objects_to_create_stl = []
@@ -123,43 +120,42 @@ def automate_function(
     domain = Domain.from_meshes(archaea_meshes, x_scale=x_scale, y_scale=y_scale, z_scale=z_scale, wind_direction=function_inputs.wind_direction, wind_speed=function_inputs.wind_speed)
 
     # Get folder to copy cases
-    archaea_folder = get_cfd_export_path()
+    archaea_folder = get_cfd_export_path('archaea')
     if not os.path.exists(archaea_folder):
         os.makedirs(archaea_folder)
 
     # Get case folder
     case_folder = os.path.join(archaea_folder, version_root_object.id)
     domain.create_case(case_folder, function_inputs.number_of_cpus)
-    cmd_path = os.path.join(case_folder, './Allrun')
+    cmd_path = os.path.join(case_folder, './All-runs')
     cmd = "/bin/bash -c '{cmd_path}'".format(cmd_path=cmd_path)
 
-    # retcode = subprocess.call(cmd, shell=True, stdout=pipefile)
     completed_process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     print(completed_process.stdout)
 
-    blockMesh_log = os.path.join(case_folder, 'log.blockMesh')
-    add_to_store_if_exist(automate_context, blockMesh_log)
+    block_mesh_log = os.path.join(case_folder, 'log.blockMesh')
+    add_to_store_if_exist(automate_context, block_mesh_log)
 
-    decomposePar_log = os.path.join(case_folder, 'log.decomposePar')
-    add_to_store_if_exist(automate_context, decomposePar_log)
+    decompose_par_log = os.path.join(case_folder, 'log.decomposePar')
+    add_to_store_if_exist(automate_context, decompose_par_log)
 
-    patchSummary_log = os.path.join(case_folder, 'log.patchSummary')
-    add_to_store_if_exist(automate_context, patchSummary_log)
+    patch_summary_log = os.path.join(case_folder, 'log.patchSummary')
+    add_to_store_if_exist(automate_context, patch_summary_log)
 
-    reconstructPar_log = os.path.join(case_folder, 'log.reconstructPar')
-    add_to_store_if_exist(automate_context, reconstructPar_log)
+    reconstruct_par_log = os.path.join(case_folder, 'log.reconstructPar')
+    add_to_store_if_exist(automate_context, reconstruct_par_log)
 
-    reconstructParMesh_log = os.path.join(case_folder, 'log.reconstructParMesh')
-    add_to_store_if_exist(automate_context, reconstructParMesh_log)
+    reconstruct_par_mesh_log = os.path.join(case_folder, 'log.reconstructParMesh')
+    add_to_store_if_exist(automate_context, reconstruct_par_mesh_log)
 
-    simpleFoam_log = os.path.join(case_folder, 'log.simpleFoam')
-    add_to_store_if_exist(automate_context, simpleFoam_log)
+    simple_foam_log = os.path.join(case_folder, 'log.simpleFoam')
+    add_to_store_if_exist(automate_context, simple_foam_log)
 
-    snappyHexMesh_log = os.path.join(case_folder, 'log.snappyHexMesh')
-    add_to_store_if_exist(automate_context, snappyHexMesh_log)
+    snappy_hex_mesh_log = os.path.join(case_folder, 'log.snappyHexMesh')
+    add_to_store_if_exist(automate_context, snappy_hex_mesh_log)
 
-    surfaceFeatures_log = os.path.join(case_folder, 'log.surfaceFeatures')
-    add_to_store_if_exist(automate_context, surfaceFeatures_log)
+    surface_features_log = os.path.join(case_folder, 'log.surfaceFeatures')
+    add_to_store_if_exist(automate_context, surface_features_log)
 
     vtk_file = os.path.join(case_folder, 'postProcessing',
                             'cutPlaneSurface', '400', 'U_cutPlane.vtk')
@@ -220,9 +216,9 @@ def wind_direction_arrow(domain: Domain):
 
     display_style = DisplayStyle()
     display_style.color = -16777216
-    display_style.linetype = "Continuous"
+    display_style.line_type = "Continuous"
     display_style.units = "m"
-    display_style.lineweight = 0
+    display_style.line_weight = 0
 
     text.displayStyle = display_style
 
