@@ -1,16 +1,33 @@
-# We use the official Python 3.11 image as our base image and will add our code to it. For more details, see https://hub.docker.com/_/python
-FROM python:3.13-slim
+FROM ubuntu:22.04
+ENV DEBIAN_FRONTEND=noninteractive
 
-# We install poetry to generate a list of dependencies which will be required by our application
-RUN pip install poetry==1.8.4
+# setup timezone
+ENV TZ=Europe/Istanbul
+ENV VM_PROJECT_DIR=/opt/openfoam9
 
-# We set the working directory to be the /home/speckle directory; all of our files will be copied here.
-WORKDIR /home/speckle
+# Create a non-root user 
+RUN useradd -ms /bin/bash openfoamRunner
 
-# Copy all of our code and assets from the local directory into the /home/speckle directory of the container.
-# We also ensure that the user 'speckle' owns these files, so it can access them
-# This assumes that the Dockerfile is in the same directory as the rest of the code
-COPY . /home/speckle
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Using poetry, we generate a list of requirements, save them to requirements.txt, and then use pip to install them
-RUN poetry export --format requirements.txt --output /home/speckle/requirements.txt && pip install --requirement /home/speckle/requirements.txt
+RUN apt update
+RUN apt install -y wget software-properties-common python3-pip
+RUN wget -O - https://dl.openfoam.org/gpg.key > /etc/apt/trusted.gpg.d/openfoam.asc
+RUN add-apt-repository http://dl.openfoam.org/ubuntu
+RUN apt-get update
+RUN apt-get -y --no-install-recommends install openfoam9
+
+RUN echo "source /opt/openfoam9/etc/bashrc" >> /root/.bashrc
+RUN echo "source /opt/openfoam9/etc/bashrc" >> /home/openfoamRunner/.bashrc
+
+RUN pip install poetry
+
+# Change the ownership of your project directory to the non-root user
+RUN chown -R openfoamRunner:openfoamRunner $VM_PROJECT_DIR
+
+USER openfoamRunner
+
+COPY . .
+RUN poetry export -f requirements.txt --output /home/openfoamRunner/requirements.txt && pip3 install -r /home/openfoamRunner/requirements.txt
+
+CMD ["/bin/bash"]
