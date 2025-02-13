@@ -1,6 +1,5 @@
 """Run integration tests with a speckle server."""
 
-from pydantic import SecretStr
 
 from speckle_automate import (
     AutomationContext,
