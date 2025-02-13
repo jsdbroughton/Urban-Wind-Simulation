@@ -10,9 +10,8 @@ RUN useradd -ms /bin/bash openfoamRunner
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install dependencies and Python 3.11
+# Install dependencies and Python 3.11 (without Deadsnakes repository)
 RUN apt update && apt install -y wget software-properties-common python3-pip python3-apt
-RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt update
 RUN apt-get install -y python3.11 python3.11-distutils
 
@@ -22,7 +21,10 @@ RUN update-alternatives --set python3 /usr/bin/python3.11
 
 # Install OpenFOAM and other necessary packages
 RUN wget -O - https://dl.openfoam.org/gpg.key > /etc/apt/trusted.gpg.d/openfoam.asc
-RUN add-apt-repository http://dl.openfoam.org/ubuntu
+
+# Manually add the OpenFOAM repository to sources.list
+RUN echo "deb http://dl.openfoam.org/ubuntu focal main" > /etc/apt/sources.list.d/openfoam.list
+
 RUN apt-get update
 RUN apt-get -y --no-install-recommends install openfoam9
 
