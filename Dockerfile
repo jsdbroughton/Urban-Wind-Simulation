@@ -11,7 +11,7 @@ RUN useradd -ms /bin/bash openfoamRunner
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # Install dependencies and Python 3.11
-RUN apt update && apt install -y wget software-properties-common python3-pip
+RUN apt update && apt install -y wget software-properties-common python3-pip python3-apt
 RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt update
 RUN apt-get install -y python3.11 python3.11-distutils
