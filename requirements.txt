@@ -352,7 +352,7 @@ ladybug-core==0.44.1 ; python_version >= "3.11" and python_version < "3.12" \
 ladybug-geometry-polyskel==1.7.16 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:1c83648ac8363733fd31fae57dcf8a9bf4b20df45440ed33692bcb5e7ef0b75c \
     --hash=sha256:beb3f294f5f2889561d27cb8e31d5af16bc372a62453c6e11a4dffce080d09fb
-ladybug-geometry==1.33.14 ; python_version >= "3.11" and python_version < "3.12" \
+ladybug-geometry==1.33.18 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:4830925e957fef3471d69717198b32fd15c346e9814eb7d185b0d25e2bd990eb \
     --hash=sha256:fe34971985990f94ec70799baa6e9682eae3187b055e2068c068a5e5197a1c9a
 matplotlib==3.10.0 ; python_version >= "3.11" and python_version < "3.12" \
