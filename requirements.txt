@@ -244,9 +244,9 @@ graphql-core==3.2.6 ; python_version >= "3.11" and python_version < "3.12" \
 h11==0.14.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:8f19fbbe99e72420ff35c00b27a34cb9937e902a8b810e2c88300c6f0a3b699d \
     --hash=sha256:e3fe4ac4b851c468cc8363d500db52c2ead036020723024a109d37346efaa761
-honeybee-core==1.61.4 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:4082b148412e62aa3f897cf925a9c13329cb3aaf81dc31500c63ca2b9bc1ee38 \
-    --hash=sha256:fc431092c2027b5cae44c61396d8b82563ee63663d8c64eceb7f5aa183934b6d
+honeybee-core==1.61.8; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:7cded179d8c7e1378c601da4145e92722b924d583d9afb4147603e9a9ed0fc4e \
+    --hash=sha256:dcd5973f60e71bcff02bd1d117e4e90ddfa037dda2c90b9a4d22417c19eecdaa
 honeybee-energy==1.112.9 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:7e70b0056ff1c23fe104db794676a58618c848831cd9dab090094e76199bc463 \
     --hash=sha256:eb7d5eece7c1b191aad3ae3239cfe1137db8cc99dc0e71b41cd9713fdb2310dd
