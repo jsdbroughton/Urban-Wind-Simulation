@@ -346,9 +346,9 @@ kiwisolver==1.4.8 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:eb158fe28ca0c29f2260cca8c43005329ad58452c36f0edf298204de32a9a3ed \
     --hash=sha256:ed33ca2002a779a2e20eeb06aea7721b6e47f2d4b8a8ece979d8ba9e2a167e34 \
     --hash=sha256:fc2ace710ba7c1dfd1a3b42530b62b9ceed115f19a1656adefce7b1782a37794
-ladybug-core==0.44.1 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:78a69504e93fab8651c2ca64ec8c16da1bba871cfb5915bfcaf6e779b6a078d6 \
-    --hash=sha256:b74ed113329fb2363c64c849f8860816f6ce5bf3a9b186ce5dda42461a852bb2
+ladybug-core==0.44.5; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:2ec499b07e2840538f8b58416cd4667eedb505805f77f80e2e36879ef876e923 \
+    --hash=sha256:71b3223e3e8872ad3282579ac17bfd7b1b988d3f998db258f3296427ae3d1e1b
 ladybug-geometry-polyskel==1.7.16 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:1c83648ac8363733fd31fae57dcf8a9bf4b20df45440ed33692bcb5e7ef0b75c \
     --hash=sha256:beb3f294f5f2889561d27cb8e31d5af16bc372a62453c6e11a4dffce080d09fb
