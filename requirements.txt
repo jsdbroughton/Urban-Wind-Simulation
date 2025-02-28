@@ -247,9 +247,9 @@ h11==0.14.0 ; python_version >= "3.11" and python_version < "3.12" \
 honeybee-core==1.61.4 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:4082b148412e62aa3f897cf925a9c13329cb3aaf81dc31500c63ca2b9bc1ee38 \
     --hash=sha256:fc431092c2027b5cae44c61396d8b82563ee63663d8c64eceb7f5aa183934b6d
-honeybee-energy==1.112.9 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:7e70b0056ff1c23fe104db794676a58618c848831cd9dab090094e76199bc463 \
-    --hash=sha256:eb7d5eece7c1b191aad3ae3239cfe1137db8cc99dc0e71b41cd9713fdb2310dd
+honeybee-energy==1.112.13; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:320405894fd3a0bdca5773c1004a460b25b8b1de61a8d75cb590a92f2c7cf9ef \
+    --hash=sha256:c320d917433965df5626e5e0125f64c4b1218b741bd652a870ce3fc870cd0898
 honeybee-schema==1.58.6 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:459672c2d31e6077295e285d627fde2ab22685641f17b05917c931f7c4fb90b5 \
     --hash=sha256:9eab6088f411350c2e7ad2861224eb2761b10dba80347aacc64d0d21b5c4fcd4
