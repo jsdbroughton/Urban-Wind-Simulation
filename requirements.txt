@@ -896,9 +896,9 @@ ujson==5.10.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:f77b74475c462cb8b88680471193064d3e715c7c6074b1c8c412cb526466efe9 \
     --hash=sha256:f8ccb77b3e40b151e20519c6ae6d89bfe3f4c14e8e210d910287f778368bb3d1 \
     --hash=sha256:fbd8fd427f57a03cff3ad6574b5e299131585d9727c8c366da4624a9069ed746
-urllib3==2.3.0 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df \
-    --hash=sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d
+urllib3==2.7.0; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:231e0ec3b63ceb14667c67be60f2f2c40a518cb38b03af60abc813da26505f4c \
+    --hash=sha256:9fb4c81ebbb1ce9531cce37674bbc6f1360472bc18ca9a553ede278ef7276897
 vtk==9.4.1 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:0854c33ae411b14f359d7ab7e5c9e400985ff430b0171e12455a772824049f19 \
     --hash=sha256:0a8427dbaa3248a5629d3cd20af8d1f99c89e7ed58b9b03b8eda2a98d0c3bd98 \
