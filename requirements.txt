@@ -235,9 +235,9 @@ fonttools==4.56.0 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:f59746f7953f69cc3290ce2f971ab01056e55ddd0fb8b792c31a8acd7fee2d28 \
     --hash=sha256:fa760e5fe8b50cbc2d71884a1eff2ed2b95a005f02dda2fa431560db0ddd927f \
     --hash=sha256:ffda9b8cd9cb8b301cae2602ec62375b59e2e2108a117746f12215145e3f786c
-gql==3.5.0 ; python_version >= "3.11" and python_version < "3.12" \
-    --hash=sha256:70dda5694a5b194a8441f077aa5fb70cc94e4ec08016117523f013680901ecb7 \
-    --hash=sha256:ccb9c5db543682b28f577069950488218ed65d4ac70bb03b6929aaadaf636de9
+gql==3.5.3; python_version >= "3.11" and python_version < "3.12" \
+    --hash=sha256:393b8c049d58e0d2f5461b9d738a2b5f904186a40395500b4a84dd092d56e42b \
+    --hash=sha256:e1fcbde2893fcafdd28114ece87ff47f1cc339a31db271fc4e1d528f5a1d4fbc
 graphql-core==3.2.6 ; python_version >= "3.11" and python_version < "3.12" \
     --hash=sha256:78b016718c161a6fb20a7d97bbf107f331cd1afe53e45566c59f776ed7f0b45f \
     --hash=sha256:c08eec22f9e40f0bd61d805907e3b3b1b9a320bc606e23dc145eebca07c8fbab
